@@ -48,10 +48,7 @@ router.post('/signup', (req, res, next) => {
         res.redirect('/');
       }
     })
-    .catch(err => {
-      console.log(err);
-      next();
-    });
+    .catch(next);
 });
 
 router.get('/login', function (req, res, next) {
@@ -97,10 +94,7 @@ router.post('/login', (req, res, next) => {
       req.session.currentUser = user;
       res.redirect('/');
     })
-    .catch(err => {
-      console.log(err);
-      next();
-    });
+    .catch(next);
 });
 
 router.get('/logout', (req, res, next) => {
