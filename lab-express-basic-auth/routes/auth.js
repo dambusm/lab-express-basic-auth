@@ -44,8 +44,9 @@ router.post('/signup', (req, res, next) => {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
         const newUser = new User({ username: username, password: hash });
-        newUser.save();
-        res.redirect('/');
+        // Note: if you *return* the result of a function that returns a *promise*, you don't need an extra catch statement, because
+        // the error bubbles up to the parent function's catch statement
+        return newUser.save().then(result => res.redirect('/auth/login'));
       }
     })
     .catch(next);
@@ -105,7 +106,7 @@ router.get('/logout', (req, res, next) => {
   };
 
   delete req.session.currentUser;
-  res.redirect('/auth/login');
+  res.redirect('/');
 });
 
 module.exports = router;
