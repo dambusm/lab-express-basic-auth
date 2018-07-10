@@ -6,6 +6,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const flash = require('connect-flash');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -34,6 +35,7 @@ app.use(session({
     ttl: 24 * 60 * 60 // 1 day
   })
 }));
+app.use(flash());
 
 // --- Routes
 app.use('/', indexRouter);
