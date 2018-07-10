@@ -10,6 +10,7 @@ const saltRounds = 10;
 router.get('/signup', function (req, res, next) {
   // Check if user is logged in
   if (req.session.currentUser) {
+    console.log('user is already logged in');
     return res.redirect('/');
   }
   res.render('auth/signup', { title: 'Express' });
@@ -20,14 +21,14 @@ router.post('/signup', (req, res, next) => {
   const password = req.body.password;
   // Check if user is logged in
   if (req.session.currentUser) {
+    console.log('user is already logged in');
     return res.redirect('/');
   }
 
   // Check if username and password params have been sent
   if (!username || !password) {
     console.log('username or password param not supplied');
-    res.redirect('/auth/signup');
-    return;
+    return res.redirect('/auth/signup'); ;
   }
 
   // Check if user exists
@@ -35,7 +36,7 @@ router.post('/signup', (req, res, next) => {
     .then((user) => {
       if (user) {
         // Username exists
-        console.log(err);
+        console.log('User already exists');
         return res.redirect('/auth/signup');
       } else {
         // Username doesn't exist, create the user
@@ -56,6 +57,7 @@ router.post('/signup', (req, res, next) => {
 router.get('/login', function (req, res, next) {
   // Check if user is logged in
   if (req.session.currentUser) {
+    console.log('user is already logged in');
     return res.redirect('/');
   }
   res.render('auth/login', { title: 'Express' });
@@ -67,14 +69,14 @@ router.post('/login', (req, res, next) => {
 
   // Check if user is logged in
   if (req.session.currentUser) {
+    console.log('user is already logged in');
     return res.redirect('/');
   }
 
   // Check if username and password params have been sent
   if (!username || !password) {
     console.log('username or password param not supplied');
-    res.redirect('/auth/login');
-    return;
+    return res.redirect('/auth/login');
   }
   // Check if user exists
   User.findOne({ username: username })
@@ -82,14 +84,18 @@ router.post('/login', (req, res, next) => {
       if (!user) {
         // User doesn't exist
         console.log('username does not exist in db');
-        res.redirect('/auth/login');
+        return res.redirect('/auth/login');
       }
-      if (bcrypt.compareSync(password, user.password)) {
-        console.log('log in successful');
-        // Save session info
-        req.session.currentUser = user;
-        res.redirect('/');
+      if (!bcrypt.compareSync(password, user.password)) {
+        // Password incorrect
+        console.log('Password incorrect');
+        return res.redirect('/auth/login');
       }
+
+      console.log('log in successful');
+      // Save session info
+      req.session.currentUser = user;
+      res.redirect('/');
     })
     .catch(err => {
       console.log(err);
@@ -100,16 +106,12 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
   // Check that the user is logged in
   if (!req.session.currentUser) {
+    console.log('user is already logged in');
     return res.redirect('/');
   };
 
-  req.session.destroy((err) => {
-    if (err) {
-      console.log(err);
-      next();
-    }
-    res.redirect('/auth/login');
-  });
+  delete req.session.currentUser;
+  res.redirect('/auth/login');
 });
 
 module.exports = router;
