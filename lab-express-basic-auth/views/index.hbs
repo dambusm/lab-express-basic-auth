@@ -1,6 +1,7 @@
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
 
+{{#unless currentUser}}
 <ul>
   <li>
     <a href="/auth/signup">Sign up</a>
@@ -9,8 +10,7 @@
     <a href="/auth/login">Login</a>
   </li>
 </ul>
-
-{{#if currentUser}} Logged in as: {{currentUser.username}}
+{{/unless}} {{#if currentUser}} Logged in as: {{currentUser.username}}
 <P>
   <a href="auth/logout">Logout</a>
 </P>{{/if}}
