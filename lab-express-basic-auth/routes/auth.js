@@ -100,7 +100,7 @@ router.post('/login', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/logout', (req, res, next) => {
+router.post('/logout', (req, res, next) => {
   // Check that the user is logged in
   if (!req.session.currentUser) {
     return res.redirect('/');

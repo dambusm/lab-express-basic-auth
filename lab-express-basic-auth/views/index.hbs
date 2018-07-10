@@ -12,5 +12,7 @@
 </ul>
 {{/unless}} {{#if currentUser}} Logged in as: {{currentUser.username}}
 <P>
-  <a href="auth/logout">Logout</a>
+  <form method='post' action='auth/logout'>
+    <button>Log out</button>
+  </form>
 </P>{{/if}}
